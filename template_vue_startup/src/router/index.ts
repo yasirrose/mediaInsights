@@ -26,7 +26,8 @@ const router = createRouter({
     { path: '/page/success', component: () => import('../views/PageStripeSuccess.vue') },
     { path: '/page/cancel', component: () => import('../views/PageStripeCancel.vue') },
     { path: '/page/users', component: () => import('../views/PageUsers.vue') },
-    { path: '/page/podcasts', component: () => import('../views/PagePodcasts.vue') },
+    { path: '/page/podcasts-search', component: () => import('../views/PagePodcastSearch.vue') },
+    { path: '/page/my-podcast', component: () => import('../views/PageMyPodcast.vue') },
     { path: '/:pathMatch(.*)*', component: () => import('../views/PageError.vue') },
 
   ],

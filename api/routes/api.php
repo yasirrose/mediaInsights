@@ -27,7 +27,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/signup', [UserController::class, 'signupUser']);
 Route::post('/login', [UserController::class, 'loginUser']);
 Route::post('/checkout/{planId}', [CheckoutController::class, 'checkout']);
-Route::post('/podcasts', [PodcastController::class, 'index']);
+// Route::get('/podcasts', [PodcastController::class, 'index']);
+Route::post('/podcasts/search', [PodcastController::class, 'podcastSearch']);
+
+Route::get('/podcasts', [PodcastController::class, 'index']);
+Route::post('/podcasts', [PodcastController::class, 'store']);
+Route::get('/podcasts/{id}', [PodcastController::class, 'show']);
+Route::put('/podcasts/{id}', [PodcastController::class, 'update']);
+Route::delete('/podcasts/{id}', [PodcastController::class, 'destroy']);
 Route::post('/podcasts/search', [PodcastController::class, 'podcastSearch']);
 
 Route::middleware(['auth:api', 'admin'])->group(function () {

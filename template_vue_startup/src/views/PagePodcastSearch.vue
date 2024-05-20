@@ -10,9 +10,12 @@
 
     <div class="search-result">
         <div class="search-input">
-            <input type="text" class="form-control form-control-lg" v-model="searchQuery"
+            <div class="input-field">
+                <input type="text" class="form-control form-control-lg" v-model="searchQuery"
                 placeholder="Search Podcasts" />
-            <button @click="searchPodcasts" class="btn btn-secondary">Search</button>
+                <i class="fas fa-search"></i>
+            </div>
+            <button @click="searchPodcasts" class="btn search-btn">Search</button>
         </div>
 
         <div class="search-tab">
@@ -40,10 +43,22 @@
                     <div class="text-right-col">
                         <h5>NPR</h5>
                         <div class="icon-boxes pb-3">
-                            <span> <img src="/assets/img/product/download.svg" style="width: 12px;"> Podcasts</span>
-                            <span> <img src="/assets/img/product/download.svg" style="width: 12px;"> RSS</span>
-                            <span> <img src="/assets/img/product/attach.svg" style="width: 12px;"> Web</span>
-                            <span> <img src="/assets/img/product/email.svg" style="width: 12px;"> Email</span>
+                            <button class="social-podcast">
+                                <i class="fab fa-apple"></i>
+                                Podcasts
+                            </button>
+                            <button class="social-podcast"> 
+                                <i class="fas fa-rss"></i>
+                                RSS
+                            </button>
+                            <button class="social-podcast">
+                                <i class="fas fa-link"></i>
+                                Web
+                            </button>
+                            <button class="social-podcast">
+                                <i class="fa fa-envelope"></i>
+                                Email
+                            </button>
                         </div>
                         <div class="last-update">
                             <span>last updated:</span> May 15, 2024
@@ -91,10 +106,9 @@
                                     <div v-html="this.podcasts.description"></div>
                                 </div>
                                 <div class="icon-boxes link-boxes pt-4">
-                                    <span><a href=""> Podcasts</a></span>
-                                    <span><a href=""> Podcasts</a></span>
-                                    <span><a href=""> Podcasts</a></span>
-                                    <span><a href=""> Podcasts</a></span>
+                                    <span><a href=""> Business</a></span>
+                                    <span><a href=""> Education</a></span>
+                                    <span><a href=""> Society & Culture</a></span>
                                 </div>
                                 <div class="flex flex-wrap pt-5 text-helper-color align-items-center">
                                     <img src="/assets/img/product/mic.svg" style="width: 12px;" class="me-2">Hosts:
@@ -126,14 +140,104 @@
 
         </div>
 
+        <div class="past-episode-sec">
+            <div class="past-episode-wrapper">
+                <div class="past-episode-content w-75">
+                    <h2 class="pb-3">Search Past Episode</h2>
+                    <div class="form-group">
+                        <div class="input-field">
+                            <input type="text" class="form-control form-control-lg" v-model="searchQuery"
+                            placeholder="Search Podcasts" />
+                            <button @click="searchPodcasts" class="btn search-btn">search</button>
+                        </div>
+                        <label for="" class="search-label">Search past episodes of Heal squad x Maria Menounos</label>
+                    </div>
+                    <div class="embed-field">
+                        <a href="#">
+                            <i class="fas fa-code"></i>
+                            Embed this search bar to your website
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="previous-episode-sec">
+            <div class="previous-episode-wrapper">
+                <div class="previous-episode-content w-75">
+                    <div class="top-content">
+                        <div class="top-heading">
+                            <h2>PREVIOUS EPISODES</h2>
+                            <a href="#"><i class="fas fa-link"></i></a>
+                        </div>
+                        <select class="form-select">
+                            <option value="Newest First">Newest First</option>
+                            <option value="Oldest First">Oldest First</option>
+                        </select>
+                    </div>
+                    <div class="episode-listing" v-for="podcast in this.podcasts.episodes" :key="podcast.uuid">
+                        <div class="episode-content">
+                            <div class="episode-heading-content">
+                                <div class="episode-img">
+                                    <a href="#">
+                                        <img v-if="podcast.imageUrl" :src="podcast.imageUrl" alt="" />
+                                        <img v-else :src="this.podcasts.imageUrl" alt="" />
+                                    </a>
+                                </div>
+                                <div class="episode-heading-text">
+                                    <h3>{{ podcast.name }}</h3>
+                                    <p class="date">May 2, 2024</p>
+                                </div>
+                            </div>
+                            <div class="episode-description">
+                                <p class="description">
+                                    <div v-html="podcast.description"></div>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="episode-media-box">
+                            <div class="episode-media-content">
+                                <div class="episode-media">
+                                    <!-- <a href="#">
+                                        <div class="play-img">
+                                            <img src="/assets/img/product/play.svg" >
+                                        </div>
+                                    </a>
+                                    <label for="" class="voice-text" aria-label="Audio length: 00:18:51">00:18:51</label> -->
+                                    <audio controls>
+                                        <source :src="podcast.audioUrl" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                                <div class="episode-media-buttons">
+                                    <button class="media-podcast">
+                                        <i class="fas fa-share"></i>
+                                        Share
+                                    </button>
+                                    <button class="media-podcast"> 
+                                        <i class="fas fa-bookmark"></i>
+                                        Save
+                                    </button>
+                                    <button class="media-podcast">
+                                        <i class="fas fa-cut"></i>
+                                        Clip
+                                    </button>
+                                    <button class="media-podcast">
+                                        ...
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- 
         <div class="search-result">
             <div class="search-result-list">
-                <!-- {{ this.podcasts.episodes[0].name }} -->
-                <!-- {{ this.podcasts.name}} -->
                 <div class="search-result-item" v-for="podcast in this.podcasts.episodes" :key="podcast.uuid">
 
                     <div class="search-result-media">
-                        <!-- <a href="#"><img src="/assets/img/product/product.png" alt="" /></a> -->
                         <img v-if="podcast.imageUrl" :src="podcast.imageUrl" alt="" />
                         <img v-else :src="this.podcasts.imageUrl" alt="" />
 
@@ -142,9 +246,6 @@
                         <h3>
                             {{ podcast.name }}
                         </h3>
-                        <!-- <div>
-                            {{ podcast.description }}
-                        </div> -->
                         <div v-html="podcast.description"></div>
                         <audio controls>
                             <source :src="podcast.audioUrl" type="audio/mpeg">
@@ -153,7 +254,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
 
@@ -242,18 +343,40 @@ audio {
 .search-input {
     display: flex;
     align-items: center;
+    gap: 20px;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.form-control-lg {
+.search-input .input-field {
+    position: relative;
+    margin: 0;
+    width: 100%;
+}
+
+.search-input .input-field i {
+    position: absolute;
+    top: 17px;
+    right: 10px;
     font-size: 18px;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-input .input-field input {
+    font-size: 18px;
+    padding: 10px 30px 10px 20px;
+    border-radius: 0px;
+    border: 1px solid #000;
+    min-height: 50px;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+.search-input .search-btn {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    min-width: 150px;
+    border-radius: 0px;
+    min-height: 50px;
 }
 
 .btn-secondary {
@@ -291,8 +414,9 @@ audio {
     justify-content: center;
     align-items: center;
     margin-right: 6px;
-    padding: 8px;
+    padding: 0px;
     color: white;
+    font-size: 10px;
 }
 
 .top-info-single .col-heading-icon {
@@ -320,7 +444,8 @@ audio {
 
 .icon-boxes {
     display: flex;
-    column-gap: 10px;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .icon-boxes:not(.link-boxes, .simple-list) span {
@@ -334,7 +459,7 @@ audio {
     display: flex;
     gap: 6px;
     min-width: 96px;
-    text-align: center;
+    align-items: center;
     justify-content: center;
 }
 
@@ -414,5 +539,279 @@ audio {
 .tabs-content .nav.nav-tabs .nav-item.search input,
 .tabs-content .nav.nav-tabs .nav-item.search input::placeholder {
     font-weight: 600;
+}
+
+
+
+
+
+.icon-boxes .social-podcast {
+    color: rgba(0, 0, 0, .95);
+    background-color: rgba(0, 0, 0, .05);
+    padding: 4px 8px;
+    border: 1px solid #bebfc0;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    gap: 6px;
+    min-width: 96px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.icon-boxes .social-podcast i {
+    font-size: 13px;
+}
+
+.past-episode-sec .past-episode-wrapper {
+    padding: 1.875rem 0;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+.past-episode-sec .past-episode-wrapper .past-episode-content h2 {
+    color: rgba(0, 0, 0, .6);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5rem;
+    margin-bottom: 0;
+    text-transform: uppercase;
+}
+.past-episode-sec .past-episode-wrapper .past-episode-content .form-group {
+    margin-bottom: 15px;
+}
+.past-episode-sec .past-episode-wrapper .past-episode-content .form-group .input-field {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.past-episode-sec .past-episode-wrapper .past-episode-content .form-group .input-field input {
+    min-height: 50px;
+    height: 50px;
+    padding: 10px 20px 10px 20px;
+    font-size: 16px;
+    background-color: transparent;
+    box-shadow: none;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.past-episode-sec .past-episode-wrapper .past-episode-content .form-group .input-field .search-btn {
+    min-height: 50px;
+    height: 50px;
+    background-color: #B82F00;
+    color: #fff;
+    font-size: 16px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+.past-episode-sec .past-episode-wrapper .past-episode-content .form-group label.search-label {
+    color: rgba(0, 0, 0, .6);
+    font-size: 14px;
+    line-height: 1.25rem;
+}
+.past-episode-sec .past-episode-wrapper .past-episode-content .embed-field a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #B82F00;
+    font-size: 14px;
+    text-decoration: none;
+}
+.previous-episode-sec .previous-episode-wrapper {
+    padding: 1.875rem 0;
+}
+.previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content select {
+    width: max-content;
+    font-size: 14px;
+    line-height: 1rem;
+    color: #00000099;
+    padding: 8px 36px 8px 12px;
+    background-color: transparent;
+    border-color: #6b7280;
+}
+.previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content .top-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content .top-heading h2 {
+    color: rgba(0, 0, 0, .6);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5rem;
+    margin-bottom: 0;
+    text-transform: uppercase;
+}
+.previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content .top-heading a {
+    color: rgba(0, 0, 0, .6);
+}
+
+.previous-episode-sec .previous-episode-wrapper .previous-episode-content  .episode-listing {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+.episode-content .episode-heading-content {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 16px;
+}
+.episode-content .episode-heading-content .episode-img {
+    height: 4.8rem;
+    width: 4.8rem;
+    min-height: 4.8rem;
+    min-width: 4.8rem;
+    border-radius: .25rem;
+}
+.episode-content .episode-heading-content .episode-img img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: .25rem;
+}
+
+.episode-content .episode-heading-content .episode-heading-text h3 {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 600;
+    margin-bottom: .5rem;
+    color: #000;
+}
+.episode-content .episode-heading-content .episode-heading-text p.date {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 400;
+    margin-bottom: .5rem;
+    color: #8E8E8E;
+}
+.episode-content .episode-description {
+    margin-bottom: 16px;
+}
+.episode-content .episode-description p.description {
+    font-size: 14px;
+    line-height: 1.625;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    margin-bottom: 0px;
+}
+
+.episode-media-box .episode-media-content {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+.episode-media-box .episode-media-content .episode-media {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.episode-media-box .episode-media-content .episode-media .play-img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+.episode-media-box .episode-media-content .episode-media .play-img img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.episode-media-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.episode-media-buttons .media-podcast {
+    color: rgba(0, 0, 0, .95);
+    background-color: rgba(0, 0, 0, .05);
+    border: 1px solid #bebfc0;
+    border-radius: .25rem;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    padding: .25rem .5rem;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-transform: capitalize;
+}
+
+.episode-media audio {
+    margin: 0;
+}
+
+
+@media (max-width: 1200px) {
+    .w-75 {
+        width: 90% !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .search-input .search-btn {
+        min-width: 100px;
+    }
+    .w-75 {
+        width: 100% !important;
+    }
+    .top-info-single .col-heading-text h1 {
+        font-size: 22px;
+    }
+    .search-input .input-field input {
+        font-size: 16px;
+    }
+    .page-header {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 450px) {
+    .search-result .search-input {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .search-input .search-btn {
+        min-width: 100%;
+    }
+
+    .episode-media-box .episode-media-content {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .episode-media audio {
+        width: 270px;
+        margin: 0;
+    }
+    .podcast-content {
+        padding: 20px 0px !important;
+    }
+    .episode-media-box .episode-media-content .episode-media .play-img {
+        height: 30px;
+        width: 30px;
+    }
+    .pt-5 {
+        padding-top: 1rem !important;
+    }
+    .page-header {
+        font-size: 22px;
+    }
+    .top-info-single .col-heading-text h1 {
+        font-size: 20px;
+    }
 }
 </style>

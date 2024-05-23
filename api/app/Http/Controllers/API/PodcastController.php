@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\Podcast;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 use function PHPSTORM_META\type;
 
@@ -15,21 +17,48 @@ class PodcastController extends Controller
     {
         // dd('aim here');
         $podcasts = Podcast::all();
+
         return response()->json($podcasts);
     }
 
     public function store(Request $request)
     {
-        dd('aim here at save');
-        $podcast = new Podcast();
-        $podcast->title = $request->input('name');
-        $podcast->description = $request->input('description');
-        $podcast->image = $request->input('imageUrl');
-        $podcast->save();
-        return response()->json($podcast);
+        // header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Headers: *');
+
+        // dd($request->all());
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'imageUrl' => 'required',
+        ]);
+
+        try {
+            $podcast = new Podcast();
+
+            $podcast->name = $validatedData['name'];
+            $podcast->description = $validatedData['description'];
+
+            if ($request->hasFile('imageUrl')) {
+                $image = $request->file('imageUrl');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('podcast_images'), $imageName); // Move the image to the public/podcast_images folder
+
+                // Store the image path in the database
+                $podcast->imageUrl = 'podcast_images/' . $imageName;
+            }
+
+            $podcast->save();
+
+            return response()->json($podcast);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to save the podcast.'], 500);
+        }
     }
 
-    public function show($id)
+
+    public function edit($id)
     {
         $podcast = Podcast::find($id);
         return response()->json($podcast);
@@ -37,10 +66,28 @@ class PodcastController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request);
         $podcast = Podcast::find($id);
-        $podcast->title = $request->input('title');
+
+        if (!$podcast) {
+            return response()->json(['error' => 'Podcast not found'], 404);
+        }
+        $podcast->name = $request->input('name');
         $podcast->description = $request->input('description');
-        $podcast->image = $request->input('image');
+        if ($request->hasFile('imageUrl')) {
+            // Delete the old image if it exists
+            if ($podcast->imageUrl && file_exists(public_path($podcast->imageUrl))) {
+                unlink(public_path($podcast->imageUrl));
+            }
+
+            // Store the new image
+            $image = $request->file('imageUrl');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('podcast_images'), $imageName);
+
+            // Update the image path in the database
+            $podcast->imageUrl = 'podcast_images/' . $imageName;
+        }
         $podcast->save();
         return response()->json($podcast);
     }
@@ -68,9 +115,29 @@ class PodcastController extends Controller
                 itunesId
                 description
                 imageUrl
+                language
+                isExplicitContent
+                copyright
+                websiteUrl
+                rssUrl
+                rssOwnerName
+                rssOwnerPublicEmail
+                authorName
+                isCompleted
+                isBlocked
+                seriesType
+                datePublished
+                hash
+                childrenHash
                 itunesInfo{
                     uuid
+                    hash
+                    subtitle
+                    summary
                     baseArtworkUrlOf(size:640)
+                    publisherId
+                    publisherName
+                    country
                 }
                 episodes{
                     uuid

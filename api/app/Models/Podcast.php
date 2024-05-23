@@ -11,11 +11,7 @@ class Podcast extends Model
 
     protected $table = 'my_podcasts'; // specify the table name
 
-    protected $fillable = [
-        'name',
-        'description',
-        'image_url',
-    ];
+    protected $fillable = ['name','description', 'imageUrl'];
 
 
     //Define relationship with episodes

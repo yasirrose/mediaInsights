@@ -3,6 +3,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/podcast_images
 /storage/*.key
 /vendor
 .env

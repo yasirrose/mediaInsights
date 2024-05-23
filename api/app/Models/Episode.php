@@ -12,7 +12,7 @@ class Episode extends Model
     protected $fillable = [
         'name',
         'description',
-        'image_url',
+        'imageUrl',
         'audioUrl',
     ];
 

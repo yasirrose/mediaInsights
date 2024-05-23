@@ -20,6 +20,10 @@ use Laravel\Cashier\Http\Controllers\WebhookController;
 |
 */
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: Authorization, Content-Type');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -31,10 +35,10 @@ Route::post('/checkout/{planId}', [CheckoutController::class, 'checkout']);
 Route::post('/podcasts/search', [PodcastController::class, 'podcastSearch']);
 
 Route::get('/podcasts', [PodcastController::class, 'index']);
-Route::post('/podcasts', [PodcastController::class, 'store']);
-Route::get('/podcasts/{id}', [PodcastController::class, 'show']);
-Route::put('/podcasts/{id}', [PodcastController::class, 'update']);
-Route::delete('/podcasts/{id}', [PodcastController::class, 'destroy']);
+Route::post('/podcasts-save', [PodcastController::class, 'store']);
+Route::get('/podcast-edit/{id}', [PodcastController::class, 'edit']);
+Route::post('/podcast-update/{id}', [PodcastController::class, 'update']);
+Route::delete('/podcast-delete/{id}', [PodcastController::class, 'destroy']);
 Route::post('/podcasts/search', [PodcastController::class, 'podcastSearch']);
 
 Route::middleware(['auth:api', 'admin'])->group(function () {

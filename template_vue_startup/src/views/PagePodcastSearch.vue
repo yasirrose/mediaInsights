@@ -12,13 +12,13 @@
         <div class="search-input">
             <div class="input-field">
                 <input type="text" class="form-control form-control-lg" v-model="searchQuery"
-                placeholder="Search Podcasts" />
+                    placeholder="Search Podcasts" />
                 <i class="fas fa-search"></i>
             </div>
             <button @click="searchPodcasts" class="btn search-btn">Search</button>
         </div>
 
-        <div class="search-tab">
+        <div class="search-tab" v-if="this.podcasts.name != null">
             <div class="search-tab-item"><a href="#" class="search-tab-link active">PODCAST</a></div>
         </div>
 
@@ -41,19 +41,28 @@
 
                     </div>
                     <div class="text-right-col">
-                        <h5>NPR</h5>
+                        <h5>{{ this.podcasts.authorName }}</h5>
                         <div class="icon-boxes pb-3">
                             <button class="social-podcast">
+                                <a :href="this.podcasts.rssOwnerPublicEmail" target="_blank"
+                                    style="text-decoration: none; color: black;">
                                 <i class="fab fa-apple"></i>
                                 Podcasts
-                            </button>
-                            <button class="social-podcast"> 
-                                <i class="fas fa-rss"></i>
-                                RSS
+                                </a>
                             </button>
                             <button class="social-podcast">
-                                <i class="fas fa-link"></i>
-                                Web
+                                <a :href="this.podcasts.rssUrl" target="_blank"
+                                    style="text-decoration: none; color: black;">
+                                    <i class="fas fa-rss"></i>
+                                    RSS
+                                </a>
+                            </button>
+                            <button class="social-podcast">
+                                <a :href="this.podcasts.websiteUrl" target="_blank"
+                                    style="text-decoration: none; color: black;">
+                                    <i class="fas fa-link"></i>
+                                    Web
+                                </a>
                             </button>
                             <button class="social-podcast">
                                 <i class="fa fa-envelope"></i>
@@ -112,7 +121,7 @@
                                 </div>
                                 <div class="flex flex-wrap pt-5 text-helper-color align-items-center">
                                     <img src="/assets/img/product/mic.svg" style="width: 12px;" class="me-2">Hosts:
-                                    <a href="">NPR</a>
+                                    <a href="">{{ this.podcasts.authorName }}</a>
                                 </div>
                                 <div class="icon-boxes simple-list pt-3">
                                     <span> <img src="/assets/img/product/refresh.svg" style="width: 12px;"> Update
@@ -123,14 +132,16 @@
                                         sponsors</span>
                                 </div>
                                 <div class="icon-boxes simple-list pb-3 pt-3">
-                                    <span> <img src="/assets/img/product/glob.svg" style="width: 12px;"> English</span>
+                                    <span> <img src="/assets/img/product/glob.svg" style="width: 12px;"> {{
+                                        this.podcasts.language }}</span>
                                     <span> <img src="/assets/img/product/map.svg" style="width: 12px;">United
                                         States</span>
                                     <span> <img src="/assets/img/product/epi.svg" style="width: 12px;"> 758
                                         episodes</span>
-                                    <span> <img src="/assets/img/product/sin.svg" style="width: 12px;">since May 12,
-                                        2017</span>
-                                    <span> <img src="/assets/img/product/dic.svg" style="width: 12px;">episodic</span>
+                                    <span> <img src="/assets/img/product/sin.svg" style="width: 12px;">{{
+                                        this.formattedDate }}</span>
+                                    <span> <img src="/assets/img/product/dic.svg" style="width: 12px;">{{
+                                        this.podcasts.seriesType }}</span>
                                 </div>
                             </div>
                         </div>
@@ -140,14 +151,14 @@
 
         </div>
 
-        <div class="past-episode-sec">
+        <div class="past-episode-sec" v-if="this.podcasts.name != null">
             <div class="past-episode-wrapper">
                 <div class="past-episode-content w-75">
                     <h2 class="pb-3">Search Past Episode</h2>
                     <div class="form-group">
                         <div class="input-field">
                             <input type="text" class="form-control form-control-lg" v-model="searchQuery"
-                            placeholder="Search Podcasts" />
+                                placeholder="Search Podcasts" />
                             <button @click="searchPodcasts" class="btn search-btn">search</button>
                         </div>
                         <label for="" class="search-label">Search past episodes of Heal squad x Maria Menounos</label>
@@ -162,7 +173,7 @@
             </div>
         </div>
 
-        <div class="previous-episode-sec">
+        <div class="previous-episode-sec" v-if="this.podcasts.name != null">
             <div class="previous-episode-wrapper">
                 <div class="previous-episode-content w-75">
                     <div class="top-content">
@@ -191,7 +202,7 @@
                             </div>
                             <div class="episode-description">
                                 <p class="description">
-                                    <div v-html="podcast.description"></div>
+                                <div v-html="podcast.description"></div>
                                 </p>
                             </div>
                         </div>
@@ -214,7 +225,7 @@
                                         <i class="fas fa-share"></i>
                                         Share
                                     </button>
-                                    <button class="media-podcast"> 
+                                    <button class="media-podcast">
                                         <i class="fas fa-bookmark"></i>
                                         Save
                                     </button>
@@ -232,7 +243,7 @@
                 </div>
             </div>
         </div>
-<!-- 
+        <!-- 
         <div class="search-result">
             <div class="search-result-list">
                 <div class="search-result-item" v-for="podcast in this.podcasts.episodes" :key="podcast.uuid">
@@ -283,13 +294,24 @@ export default {
                 .then(response => {
                     console.log("Podcast data i need:::", response);
                     const podcasts = response.data.data.getPodcastSeries;
-                    console.log('podcast data', podcasts);
-                    // console.log('podcast Condition:::>>>>>' , (podcasts));
+                    // let epoch_time = this.podcasts.datePublished
+                    let epochTime = podcasts.datePublished;
 
+                    const date = new Date(epochTime * 1000); // multiply by 1000 to convert to milliseconds
+
+                    // Optional: Format the date in a specific way
+                    const formattedDate = date.toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "2-digit",
+                        year: "numeric"
+                    });
+
+                    // console.log(formattedDate); // prints the date in the format "Month DD, YYYY"
                     if (podcasts) {
                         // alert('aim herre');
                         this.podcasts = podcasts;
-                        console.log('This is podcast data', this.podcasts);
+                        this.formattedDate = formattedDate;
+                        // console.log('This is podcast data', this.podcasts);
                     } else {
                         this.podcasts = []; // No podcasts found
                     }
@@ -569,6 +591,7 @@ audio {
     padding: 1.875rem 0;
     border-bottom: 1px solid var(--bs-border-color);
 }
+
 .past-episode-sec .past-episode-wrapper .past-episode-content h2 {
     color: rgba(0, 0, 0, .6);
     font-size: 1rem;
@@ -577,14 +600,17 @@ audio {
     margin-bottom: 0;
     text-transform: uppercase;
 }
+
 .past-episode-sec .past-episode-wrapper .past-episode-content .form-group {
     margin-bottom: 15px;
 }
+
 .past-episode-sec .past-episode-wrapper .past-episode-content .form-group .input-field {
     display: flex;
     align-items: center;
     width: 100%;
 }
+
 .past-episode-sec .past-episode-wrapper .past-episode-content .form-group .input-field input {
     min-height: 50px;
     height: 50px;
@@ -595,6 +621,7 @@ audio {
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
+
 .past-episode-sec .past-episode-wrapper .past-episode-content .form-group .input-field .search-btn {
     min-height: 50px;
     height: 50px;
@@ -604,11 +631,13 @@ audio {
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
 }
+
 .past-episode-sec .past-episode-wrapper .past-episode-content .form-group label.search-label {
     color: rgba(0, 0, 0, .6);
     font-size: 14px;
     line-height: 1.25rem;
 }
+
 .past-episode-sec .past-episode-wrapper .past-episode-content .embed-field a {
     display: flex;
     align-items: center;
@@ -617,15 +646,18 @@ audio {
     font-size: 14px;
     text-decoration: none;
 }
+
 .previous-episode-sec .previous-episode-wrapper {
     padding: 1.875rem 0;
 }
+
 .previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
 }
+
 .previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content select {
     width: max-content;
     font-size: 14px;
@@ -635,11 +667,13 @@ audio {
     background-color: transparent;
     border-color: #6b7280;
 }
+
 .previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content .top-heading {
     display: flex;
     align-items: center;
     gap: 10px;
 }
+
 .previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content .top-heading h2 {
     color: rgba(0, 0, 0, .6);
     font-size: 1rem;
@@ -648,11 +682,12 @@ audio {
     margin-bottom: 0;
     text-transform: uppercase;
 }
+
 .previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content .top-heading a {
     color: rgba(0, 0, 0, .6);
 }
 
-.previous-episode-sec .previous-episode-wrapper .previous-episode-content  .episode-listing {
+.previous-episode-sec .previous-episode-wrapper .previous-episode-content .episode-listing {
     padding: 20px 0;
     border-bottom: 1px solid var(--bs-border-color);
 }
@@ -662,6 +697,7 @@ audio {
     gap: 15px;
     margin-bottom: 16px;
 }
+
 .episode-content .episode-heading-content .episode-img {
     height: 4.8rem;
     width: 4.8rem;
@@ -669,6 +705,7 @@ audio {
     min-width: 4.8rem;
     border-radius: .25rem;
 }
+
 .episode-content .episode-heading-content .episode-img img {
     height: 100%;
     width: 100%;
@@ -683,6 +720,7 @@ audio {
     margin-bottom: .5rem;
     color: #000;
 }
+
 .episode-content .episode-heading-content .episode-heading-text p.date {
     font-size: 14px;
     line-height: 18px;
@@ -690,9 +728,11 @@ audio {
     margin-bottom: .5rem;
     color: #8E8E8E;
 }
+
 .episode-content .episode-description {
     margin-bottom: 16px;
 }
+
 .episode-content .episode-description p.description {
     font-size: 14px;
     line-height: 1.625;
@@ -709,28 +749,33 @@ audio {
     gap: 30px;
     flex-wrap: wrap;
 }
+
 .episode-media-box .episode-media-content .episode-media {
     display: flex;
     gap: 10px;
     align-items: center;
     flex-wrap: wrap;
 }
+
 .episode-media-box .episode-media-content .episode-media .play-img {
     height: 40px;
     width: 40px;
     border-radius: 50%;
 }
+
 .episode-media-box .episode-media-content .episode-media .play-img img {
     height: 100%;
     width: 100%;
     border-radius: 50%;
     object-fit: cover;
 }
+
 .episode-media-buttons {
     display: flex;
     align-items: center;
     gap: 8px;
 }
+
 .episode-media-buttons .media-podcast {
     color: rgba(0, 0, 0, .95);
     background-color: rgba(0, 0, 0, .05);
@@ -762,15 +807,19 @@ audio {
     .search-input .search-btn {
         min-width: 100px;
     }
+
     .w-75 {
         width: 100% !important;
     }
+
     .top-info-single .col-heading-text h1 {
         font-size: 22px;
     }
+
     .search-input .input-field input {
         font-size: 16px;
     }
+
     .page-header {
         font-size: 24px;
     }
@@ -781,6 +830,7 @@ audio {
         flex-wrap: wrap;
         gap: 10px;
     }
+
     .search-input .search-btn {
         min-width: 100%;
     }
@@ -789,27 +839,34 @@ audio {
         flex-wrap: wrap;
         gap: 10px;
     }
+
     .previous-episode-sec .previous-episode-wrapper .previous-episode-content .top-content {
         flex-wrap: wrap;
         gap: 10px;
     }
+
     .episode-media audio {
         width: 270px;
         margin: 0;
     }
+
     .podcast-content {
         padding: 20px 0px !important;
     }
+
     .episode-media-box .episode-media-content .episode-media .play-img {
         height: 30px;
         width: 30px;
     }
+
     .pt-5 {
         padding-top: 1rem !important;
     }
+
     .page-header {
         font-size: 22px;
     }
+
     .top-info-single .col-heading-text h1 {
         font-size: 20px;
     }

@@ -28,6 +28,11 @@ export const useAppSidebarMenuStore = defineStore({
         url: '/page/my-podcast',
         icon: 'fa fa-podcast',
         text: 'My Podcast'
+      },
+      {
+        url: '/page/podcast-episodes',
+        icon: 'fa fa-play-circle',
+        text: 'Episodes'
       }
     ];
 

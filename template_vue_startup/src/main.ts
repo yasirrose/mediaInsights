@@ -48,5 +48,6 @@ app.use(Vuex);
 
 app.config.globalProperties.emitter = emitter;
 app.config.globalProperties.$apiBaseUrl = 'http://127.0.0.1:8000/api';
+app.config.globalProperties.$backendappUrl = 'http://127.0.0.1:8000/';
 app.use(Toast);
 app.mount('#app');

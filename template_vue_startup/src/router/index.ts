@@ -28,6 +28,7 @@ const router = createRouter({
     { path: '/page/users', component: () => import('../views/PageUsers.vue') },
     { path: '/page/podcasts-search', component: () => import('../views/PagePodcastSearch.vue') },
     { path: '/page/my-podcast', component: () => import('../views/PageMyPodcast.vue') },
+    { path: '/page/podcast-episodes', component: () => import('../views/PagePodcastEpisodes.vue') },
     { path: '/:pathMatch(.*)*', component: () => import('../views/PageError.vue') },
 
   ],

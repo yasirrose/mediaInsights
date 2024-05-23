@@ -144,7 +144,7 @@ export default {
             } else {
                 this.savePodcast();
             }
-            this.closeModal(); // Add this line to close the modal after submission
+            // this.closeModal(); // Add this line to close the modal after submission
         },
         savePodcast() {
             // alert('save podcast');
@@ -192,9 +192,9 @@ export default {
                     toast.success('Podcast updated successfully.');
                     this.closeModal();
                     // Clear form data after successful submission
-                    this.podcast.name = '';
-                    this.podcast.description = '';
-                    this.podcast.imageUrl = '';
+                    // this.podcast.name = '';
+                    // this.podcast.description = '';
+                    // this.podcast.imageUrl = '';
                 })
                 .catch(error => {
                     console.error(error);
